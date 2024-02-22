@@ -7,7 +7,7 @@ The goal of this project is to solve the Taxi-v3 game with an optimized model-fr
 > You are free to choose the algorithm, whether on-policy or off-policy.
 > We recommand Deep Q-Learning, or Monte Carlo-based algorithms, but feel free to find the best possible approach.
 
-## Expected features
+### Expected features
 
 Your program must include at least 2 modes :
 
@@ -16,7 +16,7 @@ Your program must include at least 2 modes :
 
 > Both training and testing the number of episodes must be entered by the user when the program launches.
 
-## Expected output
+### Expected output
 
 Your program outputs (at least) the `mean time for finishing the game` and `mean rewards within all the episodes`. It should also display random episodes.
 
@@ -24,7 +24,7 @@ To **prove** your algo performances, you must benchmark it against as many metri
 
 You are also expected to develop a naive bruteforce algorithm as a comparaison point.
 
-## Delivery
+### Delivery
 
 You must report these facts and figures in a document that also includes :
 
@@ -34,3 +34,17 @@ You must report these facts and figures in a document that also includes :
 
 > To prove the efficiency of your algorithm, you may add other comparaison algorithms.
 > For instance, a Q-Learning algo might be compared to a Deep Q-Learning algo.
+
+## Resources
+
+### Taxi game
+
+- [Taxi-v3 game](https://gymnasium.farama.org/environments/toy_text/taxi/)
+
+The Taxi Problem involves navigating to passengers in a grid world, picking them up and dropping them off at one of four locations.
+
+There are **four designated pick-up and drop-off locations** (*Red, Green, Yellow and Blue*) in the **5x5 grid world**. The taxi starts off at a random square and the passenger at one of the designated locations.
+
+The goal is **move** the taxi to the **passenger's location**, **pick up the passenger**, **move** to the passenger's **desired destination**, and **drop off the passenger**. Once the passenger is dropped off, the `episode ends`.
+
+The player receives `positive rewards` for successfully dropping-off the passenger at the correct location. `Negative rewards` for incorrect attempts to pick-up/drop-off passenger and for each step where another reward is not received.
