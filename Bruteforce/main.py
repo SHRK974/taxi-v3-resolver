@@ -6,6 +6,7 @@ sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 import gymnasium as gym
 
+from Bruteforce.Data.BruteforceResult import BruteforceResult
 from Bruteforce.Data.EpisodeResult import EpisodeResult
 from Bruteforce.Models.Bruteforce import Bruteforce
 from Bruteforce.Models.GameManager import GameManager
@@ -14,12 +15,15 @@ from Bruteforce.Models.TopRightSequence import TopRightSequence
 
 ENV_GAME = "Taxi-v3"
 
-def bruteforce(amount: int) -> None:
+def bruteforce(amount: int) -> BruteforceResult:
     """
     Bruteforce the Taxi-v3 environment a certain amount of times and print the results
 
     Args:
         amount (int): The amount of times to bruteforce the environment
+        
+    Returns:
+        BruteforceResult: The bruteforce batch results.
     """
     number_solved, number_unsolved = 0, 0
     bruteforce_results = []
@@ -33,9 +37,18 @@ def bruteforce(amount: int) -> None:
             number_solved += 1
         else:
             number_unsolved += 1
+    
     print(f"Solved: {number_solved}, Unsolved: {number_unsolved}, Total: {amount} ({(number_solved / amount) * 100}% success rate)")
     print()
     process_bruteforce_results(bruteforce_results)
+    
+    return BruteforceResult(
+        total_solved=number_solved,
+        total_unsolved=number_unsolved,
+        total_attempts=amount,
+        success_rate=(number_solved / amount) * 100,
+        results=bruteforce_results
+    )
 
 def process_bruteforce_results(results: list[EpisodeResult]) -> None:
     """

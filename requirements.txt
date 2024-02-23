@@ -2,3 +2,5 @@ gymnasium==0.29.1
 gymnasium[toy-text]==0.29.1
 ipykernel==6.29.2
 pydantic==2.6.1
+matplotlib==3.8.3
+numpy==1.26.4
