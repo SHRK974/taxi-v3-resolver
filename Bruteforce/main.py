@@ -25,4 +25,4 @@ def bruteforce(amount: int) -> None:
             number_unsolved += 1
     print(f"Solved: {number_solved}, Unsolved: {number_unsolved}, Total: {amount} ({(number_solved / amount) * 100}% success rate)")
 
-bruteforce(amount=10000)
+bruteforce(amount=100)
