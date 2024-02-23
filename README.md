@@ -12,7 +12,7 @@ The goal of this project is to solve the Taxi-v3 game with an optimized model-fr
 Your program must include at least 2 modes :
 
 - user mode allows to tune algorithm parameters
-- time-limitedmodeuses optimized parameters to reduce the steps to solve the problem in a given time.
+- time-limited mode uses optimized parameters to reduce the steps to solve the problem in a given time.
 
 > Both training and testing the number of episodes must be entered by the user when the program launches.
 
