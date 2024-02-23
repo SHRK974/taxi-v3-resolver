@@ -1,9 +1,9 @@
 from Bruteforce.Models.GameManager import GameManager
-
 from Bruteforce.Enums.GameActionEnum import GameActionEnum
 from Bruteforce.Models.TopRightSequence import TopRightSequence
 from Bruteforce.Models.TopLeftSequence import TopLeftSequence
 from Bruteforce.Models.SequenceResolver import SequenceResolver
+from Bruteforce.Data.BruteforceResult import BruteforceResult
 
 class Bruteforce:
     def __init__(
@@ -16,7 +16,7 @@ class Bruteforce:
         self.top_right_sequence = top_right_sequence.sequence
         self.top_left_sequence = top_left_sequence.sequence
     
-    def solve(self) -> bool:
+    def solve(self) -> BruteforceResult:
         # Reset the game to initial state. In this state, the taxi is spawned randomly on the map.
         state = self.manager.reset()
         
@@ -47,4 +47,8 @@ class Bruteforce:
         
         solved = SequenceResolver(manager=self.manager, sequence=sequence).solve(state=state)
         self.manager.render()
-        return solved
+        return BruteforceResult(
+            solved=solved, 
+            total_reward=self.manager.total_reward, 
+            total_steps=self.manager.total_steps
+        )

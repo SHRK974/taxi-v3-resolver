@@ -9,6 +9,8 @@ class GameManager:
     def __init__(self, env: gym.Env) -> None:
         self.env = env
         self.passenger_found = False
+        self.total_reward = 0
+        self.total_steps = 0
         
     def render(self) -> None:
         """
@@ -35,7 +37,10 @@ class GameManager:
         Returns:
             StepResult: The result of the step.
         """
-        return self.tuple_to_step_result(self.env.step(action))
+        result = self.tuple_to_step_result(self.env.step(action))
+        self.total_reward += result.reward
+        self.total_steps += 1
+        return result
     
     def move_until_stopped(self, start_state: Any, action: GameActionEnum) -> Any:
         """
@@ -52,6 +57,8 @@ class GameManager:
         
         while not done:
             result = self.tuple_to_step_result(step=self.env.step(action))
+            self.total_reward += result.reward
+            self.total_steps += 1
             if result.state == old_state:
                 done = True
             else:
@@ -71,6 +78,8 @@ class GameManager:
         env = self.env
         if self.passenger_found:
             result = self.tuple_to_step_result(env.step(GameActionEnum.DROPOFF))
+            self.total_reward += result.reward
+            self.total_steps += 1
             if result.terminated:
                 print("Problem solved.")
                 return SequenceResult(terminated=True, 
@@ -104,6 +113,8 @@ class GameManager:
         Picks up the passenger.
         """
         result = self.tuple_to_step_result(self.env.step(GameActionEnum.PICKUP))
+        self.total_reward += result.reward
+        self.total_steps += 1
         return result.reward
     
     def tuple_to_step_result(self, step: tuple[Any, float, bool, bool, dict[str, Any]]) -> StepResult:
