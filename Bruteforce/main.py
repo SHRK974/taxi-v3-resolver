@@ -1,9 +1,10 @@
+import argparse
 import sys
 from os.path import abspath, dirname, join
 
-import gymnasium as gym
-
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
+
+import gymnasium as gym
 
 from Bruteforce.Data.BruteforceResult import BruteforceResult
 from Bruteforce.Models.Bruteforce import Bruteforce
@@ -14,6 +15,12 @@ from Bruteforce.Models.TopRightSequence import TopRightSequence
 ENV_GAME = "Taxi-v3"
 
 def bruteforce(amount: int) -> None:
+    """
+    Bruteforce the Taxi-v3 environment a certain amount of times and print the results
+
+    Args:
+        amount (int): The amount of times to bruteforce the environment
+    """
     number_solved, number_unsolved = 0, 0
     bruteforce_results = []
     for i in range(amount):
@@ -31,6 +38,12 @@ def bruteforce(amount: int) -> None:
     process_bruteforce_results(bruteforce_results)
 
 def process_bruteforce_results(results: list[BruteforceResult]) -> None:
+    """
+    Process the bruteforce results and print the mean, max and min reward and steps, as well as the best and worst result
+
+    Args:
+        results (list[BruteforceResult]): The bruteforced episodes results
+    """
     mean_reward = sum([result.total_reward for result in results]) / len(results)
     mean_steps = sum([result.total_steps for result in results]) / len(results)
     print(f"Mean reward: {mean_reward}, Mean steps: {mean_steps}")
@@ -43,4 +56,8 @@ def process_bruteforce_results(results: list[BruteforceResult]) -> None:
     worst_result = next(result for result in results if result.total_reward == worst_reward)
     print(f"Worst result: {worst_result.total_reward} reward, {worst_result.total_steps} steps")
 
-bruteforce(amount=100)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Bruteforce the Taxi-v3 environment")
+    parser.add_argument("times", type=int, help="The amount of times to bruteforce the environment")
+    args = parser.parse_args()
+    bruteforce(args.times)
