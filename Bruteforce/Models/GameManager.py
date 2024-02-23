@@ -3,8 +3,8 @@ from typing import Any, SupportsFloat
 import gym
 
 from Bruteforce.Data.SequenceResult import SequenceResult
-from Bruteforce.Data.StepResult import StepResult
-from Bruteforce.Enums.GameActionEnum import GameActionEnum
+from Taxi.Data.StepResult import StepResult
+from Taxi.Enums.GameActionEnum import GameActionEnum
 
 
 class GameManager:

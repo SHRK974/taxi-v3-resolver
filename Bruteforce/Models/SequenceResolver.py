@@ -2,9 +2,9 @@ from typing import Any, List
 
 from Bruteforce.Data.Sequence import Sequence
 from Bruteforce.Data.SequenceResult import SequenceResult
-from Bruteforce.Enums.GameActionEnum import GameActionEnum
 from Bruteforce.Enums.SequenceActionEnum import SequenceActionEnum
 from Bruteforce.Models.GameManager import GameManager
+from Taxi.Enums.GameActionEnum import GameActionEnum
 
 
 class SequenceResolver:

@@ -1,9 +1,9 @@
 from Bruteforce.Data.BruteforceResult import BruteforceResult
-from Bruteforce.Enums.GameActionEnum import GameActionEnum
 from Bruteforce.Models.GameManager import GameManager
 from Bruteforce.Models.SequenceResolver import SequenceResolver
 from Bruteforce.Models.TopLeftSequence import TopLeftSequence
 from Bruteforce.Models.TopRightSequence import TopRightSequence
+from Taxi.Enums.GameActionEnum import GameActionEnum
 
 
 class Bruteforce:
