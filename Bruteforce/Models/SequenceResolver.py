@@ -14,7 +14,13 @@ class SequenceResolver:
     
     def solve(self, state: Any) -> bool:
         """
-        Solves the problem from the top left corner.
+        Solves the problem using a predefined sequence.
+        
+        Args:
+            state (Any): The state of the game.
+            
+        Returns:
+            bool: Whether the game is solved or not.
         """
         sequence = self.sequence
         reversed_sequence = sequence.actions_backtrack
@@ -22,6 +28,9 @@ class SequenceResolver:
         result = self.__sequence_loop(state=state, list=sequence.actions)
         if result.terminated:
             return True
+        # At this point, the passenger is picked up. 
+        # But couldn't drop off, because the destination was before the pickup on the sequence.
+        # So, we need to backtrack and try to drop off the passenger.
         result = self.__sequence_loop(state=result.state, list=reversed_sequence)
         if result.terminated:
             return True

@@ -17,9 +17,10 @@ class Bruteforce:
         self.top_left_sequence = top_left_sequence.sequence
     
     def solve(self) -> bool:
+        # Reset the game to initial state. In this state, the taxi is spawned randomly on the map.
         state = self.manager.reset()
         
-        # Move to initial location to brute force the problem.
+        # Move the taxi to a predictable location. This is to determine where the taxi is based on surrounding landmarks.
         state = self.manager.move_until_stopped(state, GameActionEnum.NORTH)
         state = self.manager.move_until_stopped(state, GameActionEnum.WEST)
         

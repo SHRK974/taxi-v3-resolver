@@ -8,4 +8,4 @@ class SequenceActionEnum(str, Enum):
     SOUTH = "SOUTH"
     EAST = "EAST"
     WEST = "WEST"
-    LOC = "LOC"
+    LOC = "LOC" # To specify that the taxi is on one of the locations, and perform either pickup or dropoff afterward.
