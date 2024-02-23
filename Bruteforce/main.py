@@ -27,11 +27,20 @@ def bruteforce(amount: int) -> None:
         else:
             number_unsolved += 1
     print(f"Solved: {number_solved}, Unsolved: {number_unsolved}, Total: {amount} ({(number_solved / amount) * 100}% success rate)")
+    print()
     process_bruteforce_results(bruteforce_results)
 
 def process_bruteforce_results(results: list[BruteforceResult]) -> None:
     mean_reward = sum([result.total_reward for result in results]) / len(results)
     mean_steps = sum([result.total_steps for result in results]) / len(results)
     print(f"Mean reward: {mean_reward}, Mean steps: {mean_steps}")
+    highest_reward = max([result.total_reward for result in results])
+    worst_reward = min([result.total_reward for result in results])
+    print(f"Max reward: {highest_reward}, Min reward: {worst_reward}")
+    print()
+    best_result = next(result for result in results if result.total_reward == highest_reward)
+    print(f"Best result: {best_result.total_reward} reward, {best_result.total_steps} steps")
+    worst_result = next(result for result in results if result.total_reward == worst_reward)
+    print(f"Worst result: {worst_result.total_reward} reward, {worst_result.total_steps} steps")
 
 bruteforce(amount=100)
