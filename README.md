@@ -35,6 +35,26 @@ You must report these facts and figures in a document that also includes :
 > To prove the efficiency of your algorithm, you may add other comparaison algorithms.
 > For instance, a Q-Learning algo might be compared to a Deep Q-Learning algo.
 
+## Usage
+
+### Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+### Bruteforce
+
+A naive bruteforce algorithm is available to compare with your optimized algorithm. To run it, use the following command:
+
+```bash
+python Bruteforce/main.py --episodes 1000
+```
+
+> The `--episodes` argument is optional and defaults to 100. You are free to change it to any value you want.
+
+A benchmark and a report is available in the `Bruteforce` folder.
+
 ## Resources
 
 ### Taxi game

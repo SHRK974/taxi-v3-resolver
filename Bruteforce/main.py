@@ -58,6 +58,6 @@ def process_bruteforce_results(results: list[BruteforceResult]) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bruteforce the Taxi-v3 environment")
-    parser.add_argument("times", type=int, help="The amount of times to bruteforce the environment")
+    parser.add_argument("--episodes", type=int, default=100, help="The amount of times to bruteforce the environment")
     args = parser.parse_args()
-    bruteforce(args.times)
+    bruteforce(args.episodes)
