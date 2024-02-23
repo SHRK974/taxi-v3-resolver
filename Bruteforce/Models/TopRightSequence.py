@@ -1,6 +1,7 @@
 from Bruteforce.Data.Sequence import Sequence
 from Bruteforce.Enums.SequenceActionEnum import SequenceActionEnum
 
+
 class TopRightSequence:
     def __init__(self) -> None:
         self.sequence = Sequence(

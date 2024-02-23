@@ -1,5 +1,6 @@
 from enum import IntEnum
 
+
 class GameActionEnum(IntEnum):
     SOUTH = 0
     NORTH = 1

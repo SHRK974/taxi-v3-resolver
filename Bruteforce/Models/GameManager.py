@@ -1,9 +1,11 @@
+from typing import Any, SupportsFloat
+
 import gym
 
-from typing import Any, SupportsFloat
-from Bruteforce.Enums.GameActionEnum import GameActionEnum
 from Bruteforce.Data.SequenceResult import SequenceResult
 from Bruteforce.Data.StepResult import StepResult
+from Bruteforce.Enums.GameActionEnum import GameActionEnum
+
 
 class GameManager:
     def __init__(self, env: gym.Env) -> None:

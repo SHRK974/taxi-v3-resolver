@@ -1,11 +1,11 @@
-from typing import List, Any
+from typing import Any, List
 
-from Bruteforce.Models.GameManager import GameManager
-
-from Bruteforce.Enums.GameActionEnum import GameActionEnum
-from Bruteforce.Enums.SequenceActionEnum import SequenceActionEnum
 from Bruteforce.Data.Sequence import Sequence
 from Bruteforce.Data.SequenceResult import SequenceResult
+from Bruteforce.Enums.GameActionEnum import GameActionEnum
+from Bruteforce.Enums.SequenceActionEnum import SequenceActionEnum
+from Bruteforce.Models.GameManager import GameManager
+
 
 class SequenceResolver:
     def __init__(self, manager: GameManager, sequence: Sequence) -> None:
