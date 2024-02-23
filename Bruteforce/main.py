@@ -6,7 +6,7 @@ sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 import gymnasium as gym
 
-from Bruteforce.Data.BruteforceResult import BruteforceResult
+from Bruteforce.Data.EpisodeResult import EpisodeResult
 from Bruteforce.Models.Bruteforce import Bruteforce
 from Bruteforce.Models.GameManager import GameManager
 from Bruteforce.Models.TopLeftSequence import TopLeftSequence
@@ -37,12 +37,12 @@ def bruteforce(amount: int) -> None:
     print()
     process_bruteforce_results(bruteforce_results)
 
-def process_bruteforce_results(results: list[BruteforceResult]) -> None:
+def process_bruteforce_results(results: list[EpisodeResult]) -> None:
     """
     Process the bruteforce results and print the mean, max and min reward and steps, as well as the best and worst result
 
     Args:
-        results (list[BruteforceResult]): The bruteforced episodes results
+        results (list[EpisodeResult]): The bruteforced episodes results
     """
     mean_reward = sum([result.total_reward for result in results]) / len(results)
     mean_steps = sum([result.total_steps for result in results]) / len(results)
