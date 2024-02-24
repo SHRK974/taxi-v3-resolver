@@ -59,20 +59,22 @@ def process_bruteforce_results(results: list[EpisodeResult]) -> None:
         results (list[EpisodeResult]): The bruteforced episodes results
     """
     rewards = [result.rewards for result in results]
+    penalties = [result.penalties for result in results]
     epochs = [result.epochs for result in results]
     
-    print(f"Mean rewards per episode: {np.mean(rewards)}, Mean steps per episode: {np.mean(epochs)}")
-    print(f"Median rewards per episode: {np.median(rewards)}, Median steps per episode: {np.median(epochs)}\n")
+    print(f"Mean steps per episode: {np.mean(epochs)}")
+    print(f"Median steps per episode: {np.median(epochs)}\n")
     
-    highest_reward = np.max(rewards) 
-    worst_reward = np.min(rewards)
-    print(f"Maximum rewards achieved in a single episode: {highest_reward}")
-    print(f"Minimum rewards achieved in a single episode: {worst_reward}\n")
+    print(f"Mean rewards per episode: {np.mean(rewards)}")
+    print(f"Median rewards per episode: {np.median(rewards)}\n")
     
-    best_result = next(result for result in results if result.rewards == highest_reward)
-    print(f"Best episode: {best_result.rewards} rewards, {best_result.epochs} steps")
-    worst_result = next(result for result in results if result.rewards == worst_reward)
-    print(f"Worst episode: {worst_result.rewards} rewards, {worst_result.epochs} steps")
+    print(f"Mean penalties per episode: {np.mean(penalties)}")
+    print(f"Median penalties per episode: {np.median(penalties)}\n")
+    
+    best_result = next(result for result in results if result.rewards == np.max(rewards))
+    print(f"Best episode: {best_result.rewards} rewards, {best_result.penalties} penalties, {best_result.epochs} steps")
+    worst_result = next(result for result in results if result.rewards == np.min(rewards))
+    print(f"Worst episode: {worst_result.rewards} rewards, {worst_result.penalties} penalties, {worst_result.epochs} steps")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bruteforce the Taxi-v3 environment")
