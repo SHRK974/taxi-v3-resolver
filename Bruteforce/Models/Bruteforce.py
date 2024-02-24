@@ -50,6 +50,7 @@ class Bruteforce:
         self.manager.render()
         return EpisodeResult(
             solved=solved, 
-            total_reward=self.manager.total_reward, 
-            total_steps=self.manager.total_steps
+            epochs=self.manager.epochs,
+            rewards=self.manager.rewards,
+            penalties=self.manager.penalities
         )

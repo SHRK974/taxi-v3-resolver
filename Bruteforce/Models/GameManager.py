@@ -11,8 +11,9 @@ class GameManager:
     def __init__(self, env: gym.Env) -> None:
         self.env = env
         self.passenger_found = False
-        self.total_reward = 0
-        self.total_steps = 0
+        self.epochs = 0
+        self.rewards = 0
+        self.penalities = 0
         
     def render(self) -> None:
         """
@@ -40,8 +41,7 @@ class GameManager:
             StepResult: The result of the step.
         """
         result = self.tuple_to_step_result(self.env.step(action))
-        self.total_reward += result.reward
-        self.total_steps += 1
+        self.__update_metrics(result)
         return result
     
     def move_until_stopped(self, start_state: Any, action: GameActionEnum) -> Any:
@@ -59,8 +59,7 @@ class GameManager:
         
         while not done:
             result = self.tuple_to_step_result(step=self.env.step(action))
-            self.total_reward += result.reward
-            self.total_steps += 1
+            self.__update_metrics(result)
             if result.state == old_state:
                 done = True
             else:
@@ -80,8 +79,7 @@ class GameManager:
         env = self.env
         if self.passenger_found:
             result = self.tuple_to_step_result(env.step(GameActionEnum.DROPOFF))
-            self.total_reward += result.reward
-            self.total_steps += 1
+            self.__update_metrics(result)
             if result.terminated:
                 print("Problem solved.")
                 return SequenceResult(terminated=True, 
@@ -115,8 +113,7 @@ class GameManager:
         Picks up the passenger.
         """
         result = self.tuple_to_step_result(self.env.step(GameActionEnum.PICKUP))
-        self.total_reward += result.reward
-        self.total_steps += 1
+        self.__update_metrics(result)
         return result.reward
     
     def tuple_to_step_result(self, step: tuple[Any, float, bool, bool, dict[str, Any]]) -> StepResult:
@@ -132,3 +129,15 @@ class GameManager:
         state, reward, terminated, truncated, info = step
         
         return StepResult(state=state, reward=reward, terminated=terminated, truncated=truncated, info=info)
+    
+    def __update_metrics(self, result: StepResult) -> None:
+        """
+        Update key metrics for the game.
+
+        Args:
+            result (StepResult): The result of the step.
+        """
+        self.epochs += 1
+        self.rewards += result.reward
+        if result.reward == -10:
+            self.penalities += 1

@@ -58,18 +58,21 @@ def process_bruteforce_results(results: list[EpisodeResult]) -> None:
     Args:
         results (list[EpisodeResult]): The bruteforced episodes results
     """
-    rewards = [result.total_reward for result in results]
-    steps = [result.total_steps for result in results]
-    print(f"Mean reward: {np.mean(rewards)}, Mean steps: {np.mean(steps)}")
-    print(f"Median reward: {np.median(rewards)}, Median steps: {np.median(steps)}")
+    rewards = [result.rewards for result in results]
+    epochs = [result.epochs for result in results]
+    
+    print(f"Mean rewards per episode: {np.mean(rewards)}, Mean steps per episode: {np.mean(epochs)}")
+    print(f"Median rewards per episode: {np.median(rewards)}, Median steps per episode: {np.median(epochs)}\n")
+    
     highest_reward = np.max(rewards) 
     worst_reward = np.min(rewards)
-    print(f"Max reward: {highest_reward}, Min reward: {worst_reward}")
-    print()
-    best_result = next(result for result in results if result.total_reward == highest_reward)
-    print(f"Best episode: {best_result.total_reward} reward, {best_result.total_steps} steps")
-    worst_result = next(result for result in results if result.total_reward == worst_reward)
-    print(f"Worst episode: {worst_result.total_reward} reward, {worst_result.total_steps} steps")
+    print(f"Maximum rewards achieved in a single episode: {highest_reward}")
+    print(f"Minimum rewards achieved in a single episode: {worst_reward}\n")
+    
+    best_result = next(result for result in results if result.rewards == highest_reward)
+    print(f"Best episode: {best_result.rewards} rewards, {best_result.epochs} steps")
+    worst_result = next(result for result in results if result.rewards == worst_reward)
+    print(f"Worst episode: {worst_result.rewards} rewards, {worst_result.epochs} steps")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bruteforce the Taxi-v3 environment")
