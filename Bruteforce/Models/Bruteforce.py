@@ -19,7 +19,7 @@ class Bruteforce:
     
     def solve(self) -> EpisodeResult:
         # Reset the game to initial state. In this state, the taxi is spawned randomly on the map.
-        state = self.manager.reset()
+        state, _ = self.manager.reset()
         
         # Move the taxi to a predictable location. This is to determine where the taxi is based on surrounding landmarks.
         state = self.manager.move_until_stopped(state, GameActionEnum.NORTH)

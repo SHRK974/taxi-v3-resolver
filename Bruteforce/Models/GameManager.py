@@ -1,4 +1,4 @@
-from typing import Any, SupportsFloat
+from typing import Any, SupportsFloat, Tuple
 
 import gym
 
@@ -20,7 +20,7 @@ class GameManager:
         """
         print(self.env.render())
         
-    def reset(self) -> Any:
+    def reset(self) -> Tuple[Any, dict]:
         """
         Resets the environment.
 
