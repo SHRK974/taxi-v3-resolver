@@ -3,7 +3,7 @@ from typing import Any, SupportsFloat, Tuple
 import gymnasium as gym
 
 from Bruteforce.Data.SequenceResult import SequenceResult
-from Taxi.Data.StepResult import StepResult
+from Taxi.Data.StepResult import StepResult, step_result_from_tuple
 from Taxi.Enums.GameActionEnum import GameActionEnum
 
 
@@ -44,7 +44,7 @@ class GameManager:
         Returns:
             StepResult: The result of the step.
         """
-        result: StepResult = tuple_to_step_result(step=self.env.step(action))
+        result: StepResult = step_result_from_tuple(step=self.env.step(action))
         self.__update_metrics(result)
         return result
 
@@ -62,7 +62,7 @@ class GameManager:
         done: bool = False
 
         while not done:
-            result: StepResult = tuple_to_step_result(step=self.env.step(action))
+            result: StepResult = step_result_from_tuple(step=self.env.step(action))
             self.__update_metrics(result)
             if result.state == state:
                 done = True
@@ -82,7 +82,7 @@ class GameManager:
         """
         env: gym.Env = self.env
         if self.passenger_found:
-            result: StepResult = tuple_to_step_result(step=env.step(GameActionEnum.DROPOFF))
+            result: StepResult = step_result_from_tuple(step=env.step(GameActionEnum.DROPOFF))
             self.__update_metrics(result)
             if result.terminated:
                 return SequenceResult(
@@ -120,7 +120,7 @@ class GameManager:
         Returns:
             SupportsFloat: The reward from the environment.
         """
-        result: StepResult = tuple_to_step_result(step=self.env.step(GameActionEnum.PICKUP))
+        result: StepResult = step_result_from_tuple(step=self.env.step(GameActionEnum.PICKUP))
         self.__update_metrics(result)
         return result.reward
 
@@ -156,18 +156,3 @@ def calculate_max_steps(grid_size: int, pickups: int, dropoffs: int) -> int:
     max_steps_per_pickup = (grid_size - 1) * 2
     max_steps_per_dropoff = (grid_size - 1) * 2
     return (max_steps_per_pickup * pickups) + (max_steps_per_dropoff * dropoffs)
-
-
-def tuple_to_step_result(step: tuple[Any, SupportsFloat, bool, bool, dict[str, Any]]) -> StepResult:
-    """
-    Creates a StepResult from a tuple.
-
-    Args:
-        step (tuple): The step from the environment.
-
-    Returns:
-        StepResult: The step result.
-    """
-    state, reward, terminated, truncated, info = step
-
-    return StepResult(state=state, reward=reward, terminated=terminated, truncated=truncated, info=info)
