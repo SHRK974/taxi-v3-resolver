@@ -16,29 +16,24 @@ from Taxi.Models.GameManager import GameManager
 ENV_GAME = "Taxi-v3"
 
 
-def q_learning(amount: int) -> BatchResult:
+def q_learning(hyperparameter: Hyperparameter) -> BatchResult:
     """
     Train the Taxi-v3 environment using Q-Learning and print the results
 
     Args:
-        amount (int): The amount of episodes to train the environment
+        hyperparameter (Hyperparameter): Hyperparameters to use for training and testing the environment
 
     Returns:
         BatchResult: The results of the training
     """
     number_solved, number_unsolved = 0, 0
     results: list[EpisodeResult] = []
-    hyperparameter = Hyperparameter(
-        alpha=0.1,
-        gamma=0.6,
-        epsilon=0.1,
-        episodes_testing=1000,
-        episodes_training=1_000
-    )
+    
     manager: GameManager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"))
     trainer: QLearningTrainer = QLearningTrainer(manager=manager, hyperparameter=hyperparameter)
     trainer.train()
-    for i in range(amount):
+    
+    for i in range(hyperparameter.episodes_testing):
         print(f"Episode: {i + 1}")
         result: EpisodeResult = QLearning(manager=manager, q_table_name="q_table").solve()
         results.append(result)
@@ -50,13 +45,44 @@ def q_learning(amount: int) -> BatchResult:
     batch_result = BatchResult(
         total_solved=number_solved,
         total_unsolved=number_unsolved,
-        total_attempts=amount,
-        success_rate=(number_solved / amount) * 100,
+        total_attempts=hyperparameter.episodes_testing,
+        success_rate=(number_solved / hyperparameter.episodes_testing) * 100,
         results=results
     )
     batch_result.summary()
 
     return batch_result
 
-
-q_learning(1000)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Train the Taxi-v3 environment using Q-Learning")
+    parser.add_argument(
+        "-a", "--alpha", dest="alpha", type=float, default=0.5, help="The learning rate"
+    )
+    parser.add_argument(
+        "-g", "--gamma", dest="gamma", type=float, default=0.5, help="The discount factor"
+    )
+    parser.add_argument(
+        "-e", "--epsilon", dest="epsilon", type=float, default=0.5, help="The exploration rate"
+    )
+    parser.add_argument(
+        "--training", dest="training", type=int, default=10000, help="The number of episodes to train the environment"
+    )
+    parser.add_argument(
+        "--testing", dest="testing", type=int, default=100, help="The number of episodes to test the environment"
+    )
+    args = parser.parse_args()
+    
+    try:
+        hyperparameter = Hyperparameter(
+            alpha=args.alpha,
+            gamma=args.gamma,
+            epsilon=args.epsilon,
+            episodes_training=args.training,
+            episodes_testing=args.testing
+        )
+    except ValueError as e:
+        _, value, _ = sys.exc_info()
+        print(value)
+        exit()
+    
+    q_learning(hyperparameter=hyperparameter)

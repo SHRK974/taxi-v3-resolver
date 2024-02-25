@@ -22,14 +22,9 @@ class BatchResult(BaseModel):
         penalties = [result.penalties for result in results]
         epochs = [result.epochs for result in results]
         
-        print(f"Mean steps per episode: {np.mean(epochs)}")
-        print(f"Median steps per episode: {np.median(epochs)}\n")
-        
-        print(f"Mean rewards per episode: {np.mean(rewards)}")
-        print(f"Median rewards per episode: {np.median(rewards)}\n")
-        
+        print(f"Mean rewards per steps: {np.mean(rewards) / np.mean(epochs)}")
         print(f"Mean penalties per episode: {np.mean(penalties)}")
-        print(f"Median penalties per episode: {np.median(penalties)}\n")
+        print(f"Mean steps per episode: {np.mean(epochs)}\n")
         
         best_result = next(result for result in results if result.rewards == np.max(rewards))
         print(f"Best episode: {best_result.rewards} rewards, {best_result.penalties} penalties, {best_result.epochs} steps")
