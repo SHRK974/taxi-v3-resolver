@@ -2,11 +2,8 @@ from enum import Enum
 
 
 class SequenceActionEnum(str, Enum):
-    """
-    An enumeration of the sequence actions.
-    """
-    NORTH = "NORTH"
-    SOUTH = "SOUTH"
-    EAST = "EAST"
-    WEST = "WEST"
-    LOC = "LOC" # To specify that the taxi is on one of the locations, and perform either pickup or dropoff afterward.
+    NORTH: str = "NORTH"
+    SOUTH: str = "SOUTH"
+    EAST: str = "EAST"
+    WEST: str = "WEST"
+    LOC: str = "LOC"  # Taxi is on one of the locations, and perform either pickup or dropoff afterward.

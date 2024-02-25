@@ -7,12 +7,14 @@ sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 import gymnasium as gym
 
 from Bruteforce.Models.Bruteforce import Bruteforce
-from Bruteforce.Models.GameManager import GameManager
 from Bruteforce.Models.TopLeftSequence import TopLeftSequence
 from Bruteforce.Models.TopRightSequence import TopRightSequence
 from Taxi.Data.BatchResult import BatchResult
+from Taxi.Data.EpisodeResult import EpisodeResult
+from Taxi.Models.GameManager import GameManager
 
 ENV_GAME = "Taxi-v3"
+
 
 def bruteforce(amount: int) -> BatchResult:
     """
@@ -29,14 +31,17 @@ def bruteforce(amount: int) -> BatchResult:
     for i in range(amount):
         print(f"Bruteforce attempt {i + 1}")
         manager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"))
-        bruteforce = Bruteforce(manager=manager, top_right_sequence=TopRightSequence(), top_left_sequence=TopLeftSequence())
-        result = bruteforce.solve()
+        result: EpisodeResult = Bruteforce(
+            manager=manager,
+            top_right_sequence=TopRightSequence(),
+            top_left_sequence=TopLeftSequence()
+        ).solve()
         bruteforce_results.append(result)
         if result.solved:
             number_solved += 1
         else:
             number_unsolved += 1
-    
+
     batch_result = BatchResult(
         total_solved=number_solved,
         total_unsolved=number_unsolved,
@@ -45,8 +50,9 @@ def bruteforce(amount: int) -> BatchResult:
         results=bruteforce_results
     )
     batch_result.summary()
-    
+
     return batch_result
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bruteforce the Taxi-v3 environment")

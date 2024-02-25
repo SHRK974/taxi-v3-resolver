@@ -1,6 +1,6 @@
 from typing import Any, SupportsFloat, Tuple
 
-import gym
+import gymnasium as gym
 
 from Bruteforce.Data.SequenceResult import SequenceResult
 from Taxi.Data.StepResult import StepResult
@@ -13,30 +13,30 @@ class GameManager:
         self.passenger_found = False
         self.epochs = 0
         self.rewards = 0
-        self.penalities = 0
-    
+        self.penalties = 0
+
     def render(self) -> None:
         """
         Renders the environment.
         """
         print(self.env.render())
-    
+
     def reset(self) -> Tuple[Any, dict]:
         """
         Resets the environment.
 
         Returns:
-            Any: The initial state of the environment.
+            Tuple[Any, dict]: Tuple containing the state and the environment's info.
         """
         self.passenger_found = False
         self.epochs = 0
         self.rewards = 0
-        self.penalities = 0
+        self.penalties = 0
         return self.env.reset()
-    
+
     def step(self, action: GameActionEnum) -> StepResult:
         """
-        Steps through the environment.
+        Run one timestep of the environment's dynamics using the agent actions.
 
         Args:
             action (GameActionEnum): The action to perform.
@@ -44,32 +44,32 @@ class GameManager:
         Returns:
             StepResult: The result of the step.
         """
-        result = self.tuple_to_step_result(self.env.step(action))
+        result: StepResult = tuple_to_step_result(step=self.env.step(action))
         self.__update_metrics(result)
         return result
-    
-    def move_until_stopped(self, start_state: Any, action: GameActionEnum) -> Any:
+
+    def move_until_stopped(self, state: Any, action: GameActionEnum) -> Any:
         """
         Moves the agent until it is stopped.
 
         Args:
+            state (Any): The current state of the environment.
             action (GameActionEnum): The action to perform.
             
         Returns:
             Any: The final state.
         """
-        done = False
-        old_state = start_state
-        
+        done: bool = False
+
         while not done:
-            result = self.tuple_to_step_result(step=self.env.step(action))
+            result: StepResult = tuple_to_step_result(step=self.env.step(action))
             self.__update_metrics(result)
-            if result.state == old_state:
+            if result.state == state:
                 done = True
             else:
-                old_state = result.state
-        return old_state
-    
+                state = result.state
+        return state
+
     def loc_try_dropoff(self, state: Any) -> SequenceResult:
         """
         Tries to drop off the passenger.
@@ -78,25 +78,26 @@ class GameManager:
             state (Any): The current state of the environment.
 
         Returns:
-            terminated (bool): Whether the environment is terminated.
+            SequenceResult: The result of the sequence.
         """
-        env = self.env
+        env: gym.Env = self.env
         if self.passenger_found:
-            result = self.tuple_to_step_result(env.step(GameActionEnum.DROPOFF))
+            result: StepResult = tuple_to_step_result(step=env.step(GameActionEnum.DROPOFF))
             self.__update_metrics(result)
             if result.terminated:
-                print("Problem solved.")
-                return SequenceResult(terminated=True, 
+                return SequenceResult(
+                    terminated=True,
                     passenger_found=self.passenger_found,
                     state=result.state
                 )
-        return SequenceResult(terminated=False, 
+        return SequenceResult(
+            terminated=False,
             passenger_found=self.is_passenger_picked_up(
                 self.pick_up_passenger()
             ),
             state=state
         )
-    
+
     def is_passenger_picked_up(self, reward: SupportsFloat) -> bool:
         """
         Determines whether the passenger is picked up.
@@ -107,53 +108,22 @@ class GameManager:
         Returns:
             picked_up (bool): Whether the passenger is picked up.
         """
-        picked_up = reward == -1
+        picked_up: bool = reward == -1
         if picked_up:
             self.passenger_found = True
         return picked_up
-    
+
     def pick_up_passenger(self) -> SupportsFloat:
         """
         Picks up the passenger.
+        
+        Returns:
+            SupportsFloat: The reward from the environment.
         """
-        result = self.tuple_to_step_result(self.env.step(GameActionEnum.PICKUP))
+        result: StepResult = tuple_to_step_result(step=self.env.step(GameActionEnum.PICKUP))
         self.__update_metrics(result)
         return result.reward
-    
-    def tuple_to_step_result(self, step: tuple[Any, float, bool, bool, dict[str, Any]]) -> StepResult:
-        """
-        Creates a StepResult from a tuple.
-        
-        Args:
-        - step (tuple): The step from the environment.
-        
-        Returns:
-        - StepResult: The step result.
-        """
-        state, reward, terminated, truncated, info = step
-        
-        return StepResult(state=state, reward=reward, terminated=terminated, truncated=truncated, info=info)
-    
-    def calculate_max_steps(self, grid_size: int, pickups: int, dropoffs: int) -> int:
-        """
-        Heuristically calculates the maximum number of steps to solve the environment.
-        
-        We consider the worst case scenario where:
-        - The agent has to go through the entire grid to pick up the passenger. And come back to the initial position.
-        - The agent has to go through the entire grid to drop off the passenger. And come back to the initial position.
-        
-        Args:
-            grid_size (int): Grid size.
-            pickups (int): Number of passenger to pick up.
-            dropoffs (int): Number of passenger to drop off.
-        
-        Returns:
-            int: Calculated upper bound of steps.
-        """
-        max_steps_per_pickup = (grid_size - 1) * 2
-        max_steps_per_dropoff = (grid_size - 1) * 2
-        return (max_steps_per_pickup * pickups) + (max_steps_per_dropoff * dropoffs)
-    
+
     def __update_metrics(self, result: StepResult) -> None:
         """
         Update key metrics for the game.
@@ -164,4 +134,40 @@ class GameManager:
         self.epochs += 1
         self.rewards += result.reward
         if result.reward == -10:
-            self.penalities += 1
+            self.penalties += 1
+
+
+def calculate_max_steps(grid_size: int, pickups: int, dropoffs: int) -> int:
+    """
+    Heuristically calculates the maximum number of steps to solve the environment.
+
+    We consider the worst case scenario where:
+    - The agent has to go through the entire grid to pick up the passenger. And come back to the initial position.
+    - The agent has to go through the entire grid to drop off the passenger. And come back to the initial position.
+
+    Args:
+        grid_size (int): Grid size.
+        pickups (int): Number of passenger to pick up.
+        dropoffs (int): Number of passenger to drop off.
+
+    Returns:
+        int: Calculated upper bound of steps.
+    """
+    max_steps_per_pickup = (grid_size - 1) * 2
+    max_steps_per_dropoff = (grid_size - 1) * 2
+    return (max_steps_per_pickup * pickups) + (max_steps_per_dropoff * dropoffs)
+
+
+def tuple_to_step_result(step: tuple[Any, SupportsFloat, bool, bool, dict[str, Any]]) -> StepResult:
+    """
+    Creates a StepResult from a tuple.
+
+    Args:
+        step (tuple): The step from the environment.
+
+    Returns:
+        StepResult: The step result.
+    """
+    state, reward, terminated, truncated, info = step
+
+    return StepResult(state=state, reward=reward, terminated=terminated, truncated=truncated, info=info)
