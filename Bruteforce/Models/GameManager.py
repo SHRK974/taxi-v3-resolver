@@ -14,13 +14,13 @@ class GameManager:
         self.epochs = 0
         self.rewards = 0
         self.penalities = 0
-        
+    
     def render(self) -> None:
         """
         Renders the environment.
         """
         print(self.env.render())
-        
+    
     def reset(self) -> Tuple[Any, dict]:
         """
         Resets the environment.
@@ -28,6 +28,10 @@ class GameManager:
         Returns:
             Any: The initial state of the environment.
         """
+        self.passenger_found = False
+        self.epochs = 0
+        self.rewards = 0
+        self.penalities = 0
         return self.env.reset()
     
     def step(self, action: GameActionEnum) -> StepResult:
@@ -129,6 +133,26 @@ class GameManager:
         state, reward, terminated, truncated, info = step
         
         return StepResult(state=state, reward=reward, terminated=terminated, truncated=truncated, info=info)
+    
+    def calculate_max_steps(self, grid_size: int, pickups: int, dropoffs: int) -> int:
+        """
+        Heuristically calculates the maximum number of steps to solve the environment.
+        
+        We consider the worst case scenario where:
+        - The agent has to go through the entire grid to pick up the passenger. And come back to the initial position.
+        - The agent has to go through the entire grid to drop off the passenger. And come back to the initial position.
+        
+        Args:
+            grid_size (int): Grid size.
+            pickups (int): Number of passenger to pick up.
+            dropoffs (int): Number of passenger to drop off.
+        
+        Returns:
+            int: Calculated upper bound of steps.
+        """
+        max_steps_per_pickup = (grid_size - 1) * 2
+        max_steps_per_dropoff = (grid_size - 1) * 2
+        return (max_steps_per_pickup * pickups) + (max_steps_per_dropoff * dropoffs)
     
     def __update_metrics(self, result: StepResult) -> None:
         """

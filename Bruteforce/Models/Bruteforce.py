@@ -1,4 +1,4 @@
-from Bruteforce.Data.EpisodeResult import EpisodeResult
+from Taxi.Data.EpisodeResult import EpisodeResult
 from Bruteforce.Models.GameManager import GameManager
 from Bruteforce.Models.SequenceResolver import SequenceResolver
 from Bruteforce.Models.TopLeftSequence import TopLeftSequence
