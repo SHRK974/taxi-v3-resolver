@@ -29,18 +29,24 @@ class QLearningTrainer:
                 else:
                     action: int = np.argmax(self.q_table[state])  # Exploit learned values
                 result: StepResult = self.manager.step(action_from_int(action))
-
-                old_value = self.q_table[state, action]
-                next_max: float64 = np.max(self.q_table[result.state])
-
-                new_value = (1 - self.hyperparameter.alpha) * old_value + self.hyperparameter.alpha * (result.reward + self.hyperparameter.gamma * next_max)
-                self.q_table[state, action] = new_value
+                
+                self.q_table[state, action] = self._bellman_equation(
+                    state=state, 
+                    action=action, 
+                    reward=result.reward, 
+                    next_state=result.state
+                )
 
                 state = result.state
                 done: bool = result.terminated
 
         np.save("Q_Learning/q_table.npy", self.q_table)
         print("Training finished.\n")
+        
+    def _bellman_equation(self, state: int, action: int, reward: float64, next_state: int) -> float64:
+        old_value = self.q_table[state, action]
+        next_value = np.max(self.q_table[next_state])
+        return (1 - self.hyperparameter.alpha) * old_value + self.hyperparameter.alpha * (reward + self.hyperparameter.gamma * next_value)
         
     def _update_epsilon(self, current_episode: int) -> None:
         self.hyperparameter.epsilon = self.hyperparameter.min_epsilon + (self.hyperparameter.epsilon - self.hyperparameter.min_epsilon) * np.exp(-self.hyperparameter.epsilon_decay_rate * current_episode)
