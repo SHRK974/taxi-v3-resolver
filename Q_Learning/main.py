@@ -65,6 +65,12 @@ if __name__ == "__main__":
         "-e", "--epsilon", dest="epsilon", type=float, default=0.5, help="The exploration rate"
     )
     parser.add_argument(
+        "--min_epsilon", dest="min_epsilon", type=float, default=0.001, help="The minimum exploration rate"
+    )
+    parser.add_argument(
+        "--epsilon_decay_rate", dest="epsilon_decay_rate", type=float, default=0.01, help="The rate at which the exploration rate decays"
+    )
+    parser.add_argument(
         "--training", dest="training", type=int, default=10000, help="The number of episodes to train the environment"
     )
     parser.add_argument(
@@ -77,6 +83,8 @@ if __name__ == "__main__":
             alpha=args.alpha,
             gamma=args.gamma,
             epsilon=args.epsilon,
+            min_epsilon=args.min_epsilon,
+            epsilon_decay_rate=args.epsilon_decay_rate,
             episodes_training=args.training,
             episodes_testing=args.testing
         )

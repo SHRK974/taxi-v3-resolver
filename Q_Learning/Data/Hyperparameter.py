@@ -8,10 +8,12 @@ class Hyperparameter(BaseModel):
     "Discount factor, determines the importance of future rewards"
     epsilon: float
     "Exploration rate, determines the probability of choosing a random action instead of one based on already learned Q-values"
+    min_epsilon: float
+    epsilon_decay_rate: float
     episodes_training: int
     episodes_testing: int
     
-    @field_validator("alpha", "gamma", "epsilon")
+    @field_validator("alpha", "gamma", "epsilon", "min_epsilon", "epsilon_decay_rate")
     @classmethod
     def constrained_between_zero_and_one(cls, value: float, info: ValidationInfo) -> float:
         if not 0 < value < 1:

@@ -2,6 +2,7 @@ import random
 
 import numpy as np
 from numpy import float64
+from tqdm import tqdm
 
 from Q_Learning.Data.Hyperparameter import Hyperparameter
 from Taxi.Data.StepResult import StepResult
@@ -16,8 +17,10 @@ class QLearningTrainer:
         self.q_table = np.zeros([self.manager.env.observation_space.n, self.manager.env.action_space.n])
 
     def train(self) -> None:
-        for i in range(1, self.hyperparameter.episodes_training + 1):
+        for i in tqdm(range(1, self.hyperparameter.episodes_training + 1)):
             state, _ = self.manager.reset()
+            
+            self._update_epsilon(current_episode=i)
             
             done: bool = False
             while not done:
@@ -36,8 +39,8 @@ class QLearningTrainer:
                 state = result.state
                 done: bool = result.terminated
 
-            if i % 1000 == 0:
-                print(f"Episode: {i} of {self.hyperparameter.episodes_training} episodes")
-
         np.save("Q_Learning/q_table.npy", self.q_table)
         print("Training finished.\n")
+        
+    def _update_epsilon(self, current_episode: int) -> None:
+        self.hyperparameter.epsilon = self.hyperparameter.min_epsilon + (self.hyperparameter.epsilon - self.hyperparameter.min_epsilon) * np.exp(-self.hyperparameter.epsilon_decay_rate * current_episode)
