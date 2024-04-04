@@ -55,7 +55,82 @@ python Bruteforce/main.py --episodes 1000
 
 A benchmark and a report is available in the `Bruteforce` folder.
 
+### Q-Learning
+
+A Q-Learning algorithm is available. To run it, use the following command:
+
+```bash
+python Q-Learning/main.py
+```
+
+If you want to customize the hyperparameters, you can use the `--training` and `--alpha` arguments:
+
+```bash
+python Q-Learning/main.py --training 1000 --alpha 0.1
+```
+
+For a complete list of arguments, use the `--help` flag:
+
+```bash
+python Q-Learning/main.py --help
+```
+
+### SARSA
+
+A SARSA algorithm is available. To run it, use the following command:
+
+```bash
+python Sarsa/main.py
+```
+
+If you want to customize the hyperparameters, you can use the `--training` and `--alpha` arguments:
+
+```bash
+python Sarsa/main.py --training 1000 --alpha 0.1
+```
+
+For a complete list of arguments, use the `--help` flag:
+
+```bash
+python Sarsa/main.py --help
+```
+
 ## Resources
+
+### Hyperparameters tuning
+
+The `optuna` library is used to optimize the hyperparameters of the algorithms used in this project.
+
+It's principle is based on Bayesian Optimization techniques that rationally explore search space, focusing on promising regions and reducing computational ahead.
+
+With the advantages of prioritizing promising regions of the hyperparameter space to reduce the numbers of model evaluation required, Optuna outmarch Grid Search and Random Search. It is a preferred choice for complex scale optimization problems because of it's high efficiency and fast convergence.
+
+You can use the tuner script `Taxi/tuner.py` to find the best hyperparameters for your algorithm.
+
+#### Performance calculation
+
+The optuna library needs a performance calculation function to evaluate the hyperparameters. This function must return a score that will be used to optimize the hyperparameters.
+
+In this project we use the following performance calculation function:
+
+```python
+ObjectiveScore = (
+  (success_rate * 2)
+  + (mean_rewards_per_steps * 1.5)
+  - (mean_penalties_per_episode * 3)
+  - (mean_steps_per_episode * 1)
+)
+```
+
+This score is calculated on a testing batch of episodes.
+
+#### Dashboard
+
+To visualize the optimization process and results, you can use the `optuna-dashboard` command:
+
+```bash
+optuna-dashboard sqlite:///tuning.sqlite3
+```
 
 ### Taxi game
 
