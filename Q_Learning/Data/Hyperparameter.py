@@ -10,6 +10,7 @@ class Hyperparameter(BaseModel):
     "Exploration rate, determines the probability of choosing a random action instead of one based on already learned Q-values"
     min_epsilon: float
     epsilon_decay_rate: float
+    "The exploration rate should decrease as the agent learns about the environment."
     episodes_training: int
     episodes_testing: int
     

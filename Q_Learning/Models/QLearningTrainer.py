@@ -18,6 +18,7 @@ class QLearningTrainer:
         self.q_table = np.zeros([self.manager.env.observation_space.n, self.manager.env.action_space.n])
 
     def train(self, name) -> None:
+        print(f"Training started for {name}.\n")
         for i in tqdm(range(1, self.hyperparameter.episodes_training + 1)):
             state, _ = self.manager.reset()
             
@@ -42,7 +43,7 @@ class QLearningTrainer:
                 done: bool = result.terminated
 
         np.save(f"Q_Learning/{name}.npy", self.q_table)
-        print("Training finished.\n")
+        print(f"Training finished for {name}.\n")
         
     def delete_q_table(self, name: str) -> None:
         os.remove(f"Q_Learning/{name}.npy")
@@ -52,6 +53,6 @@ class QLearningTrainer:
         old_value = self.q_table[state, action]
         next_value = np.max(self.q_table[next_state])
         return (1 - self.hyperparameter.alpha) * old_value + self.hyperparameter.alpha * (reward + self.hyperparameter.gamma * next_value)
-        
+    
     def _update_epsilon(self, current_episode: int) -> None:
         self.hyperparameter.epsilon = self.hyperparameter.min_epsilon + (self.hyperparameter.epsilon - self.hyperparameter.min_epsilon) * np.exp(-self.hyperparameter.epsilon_decay_rate * current_episode)

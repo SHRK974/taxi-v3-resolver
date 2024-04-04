@@ -5,6 +5,7 @@ from os.path import abspath, dirname, join
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 import gymnasium as gym
+from tqdm import tqdm
 
 from Bruteforce.Models.Bruteforce import Bruteforce
 from Bruteforce.Models.TopLeftSequence import TopLeftSequence
@@ -28,8 +29,7 @@ def bruteforce(amount: int) -> BatchResult:
     """
     number_solved, number_unsolved = 0, 0
     bruteforce_results = []
-    for i in range(amount):
-        print(f"Bruteforce attempt {i + 1}")
+    for i in tqdm(range(amount)):
         manager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"))
         result: EpisodeResult = Bruteforce(
             manager=manager,
@@ -56,6 +56,6 @@ def bruteforce(amount: int) -> BatchResult:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bruteforce the Taxi-v3 environment")
-    parser.add_argument("--episodes", type=int, default=100, help="The amount of times to bruteforce the environment")
+    parser.add_argument("--episodes", type=int, default=10000, help="The amount of times to bruteforce the environment")
     args = parser.parse_args()
     bruteforce(args.episodes)

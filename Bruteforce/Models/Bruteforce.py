@@ -42,10 +42,8 @@ class Bruteforce:
 
         if steps == 1:
             state = self.manager.move_until_stopped(state, GameActionEnum.WEST)
-            print("Taxi is at the top left corner.")
             sequence: Sequence = self.top_left_sequence
         elif steps == 2:
-            print("Taxi is at the top right corner.")
             sequence: Sequence = self.top_right_sequence
         else:
             raise ValueError("Taxi is not in a corner.")

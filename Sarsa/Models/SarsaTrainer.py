@@ -18,6 +18,7 @@ class SarsaTrainer:
         self.q_table = np.zeros((self.manager.env.observation_space.n, self.manager.env.action_space.n))
 
     def train(self, name: str) -> None:
+        print(f"Training started for {name}.\n")
         for i in tqdm(range(1, self.hyperparameter.episodes_training + 1)):
             state, _ = self.manager.reset()
             
@@ -49,7 +50,7 @@ class SarsaTrainer:
                 done: bool = result.terminated
 
         np.save(f"Sarsa/{name}.npy", self.q_table)
-        print("Training finished.\n")
+        print(f"Training finished for {name}.\n")
         
     def delete_q_table(self, name: str) -> None:
         os.remove(f"Sarsa/{name}.npy")

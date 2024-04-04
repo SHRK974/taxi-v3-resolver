@@ -44,6 +44,7 @@ def objective(trial: optuna.Trial) -> float:
     trainer: QLearningTrainer = QLearningTrainer(manager=manager, hyperparameter=hyperparameter)
     trainer.train(name=trial.number)
 
+    print(f"Training validation started for {trial.number}.\n")
     for _ in range(hyperparameter.episodes_testing):
         result: EpisodeResult = QLearning(manager=manager, q_table_name=trial.number).solve()
         results.append(result)
@@ -51,6 +52,7 @@ def objective(trial: optuna.Trial) -> float:
             number_solved += 1
         else:
             number_unsolved += 1
+    print(f"Training validation finished for {trial.number}.\n")
     
     trainer.delete_q_table(name=trial.number)
     
