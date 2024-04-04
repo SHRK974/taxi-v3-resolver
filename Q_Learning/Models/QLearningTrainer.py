@@ -1,4 +1,5 @@
 import random
+import os
 
 import numpy as np
 from numpy import float64
@@ -16,7 +17,7 @@ class QLearningTrainer:
         self.hyperparameter = hyperparameter
         self.q_table = np.zeros([self.manager.env.observation_space.n, self.manager.env.action_space.n])
 
-    def train(self) -> None:
+    def train(self, name) -> None:
         for i in tqdm(range(1, self.hyperparameter.episodes_training + 1)):
             state, _ = self.manager.reset()
             
@@ -40,8 +41,12 @@ class QLearningTrainer:
                 state = result.state
                 done: bool = result.terminated
 
-        np.save("Q_Learning/q_table.npy", self.q_table)
+        np.save(f"Q_Learning/{name}.npy", self.q_table)
         print("Training finished.\n")
+        
+    def delete_q_table(self, name: str) -> None:
+        os.remove(f"Q_Learning/{name}.npy")
+        print(f"Q-Table {name} deleted.")
         
     def _bellman_equation(self, state: int, action: int, reward: float64, next_state: int) -> float64:
         old_value = self.q_table[state, action]

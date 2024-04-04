@@ -8,18 +8,20 @@ from Taxi.Enums.GameActionEnum import GameActionEnum
 
 
 class GameManager:
-    def __init__(self, env: gym.Env) -> None:
+    def __init__(self, env: gym.Env, render_output: bool = False) -> None:
         self.env = env
         self.passenger_found = False
         self.epochs = 0
         self.rewards = 0
         self.penalties = 0
+        self.render_output = render_output
 
     def render(self) -> None:
         """
         Renders the environment.
         """
-        print(self.env.render())
+        if self.render_output:
+            print(self.env.render())
 
     def reset(self) -> Tuple[Any, dict]:
         """

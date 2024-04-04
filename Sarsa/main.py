@@ -34,7 +34,6 @@ def sarsa(hyperparameter: Hyperparameter) -> BatchResult:
     trainer.train()
     
     for i in range(hyperparameter.episodes_testing):
-        print(f"Episode: {i + 1}")
         result: EpisodeResult = Sarsa(manager=manager, q_table_name="q_table").solve()
         results.append(result)
         if result.solved:
@@ -56,25 +55,25 @@ def sarsa(hyperparameter: Hyperparameter) -> BatchResult:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Taxi-v3 environment using Q-Learning")
     parser.add_argument(
-        "-a", "--alpha", dest="alpha", type=float, default=0.5, help="The learning rate"
+        "-a", "--alpha", dest="alpha", type=float, default=0.1488267085668057, help="The learning rate"
     )
     parser.add_argument(
-        "-g", "--gamma", dest="gamma", type=float, default=0.5, help="The discount factor"
+        "-g", "--gamma", dest="gamma", type=float, default=0.904577797002084, help="The discount factor"
     )
     parser.add_argument(
-        "-e", "--epsilon", dest="epsilon", type=float, default=0.5, help="The exploration rate"
+        "-e", "--epsilon", dest="epsilon", type=float, default=0.7111611440360119, help="The exploration rate"
     )
     parser.add_argument(
-        "--min_epsilon", dest="min_epsilon", type=float, default=0.001, help="The minimum exploration rate"
+        "--min_epsilon", dest="min_epsilon", type=float, default=0.015082665562560235, help="The minimum exploration rate"
     )
     parser.add_argument(
-        "--epsilon_decay_rate", dest="epsilon_decay_rate", type=float, default=0.01, help="The rate at which the exploration rate decays"
+        "--epsilon_decay_rate", dest="epsilon_decay_rate", type=float, default=0.5245924012025112, help="The rate at which the exploration rate decays"
     )
     parser.add_argument(
-        "--training", dest="training", type=int, default=10000, help="The number of episodes to train the environment"
+        "--training", dest="training", type=int, default=10129, help="The number of episodes to train the environment"
     )
     parser.add_argument(
-        "--testing", dest="testing", type=int, default=100, help="The number of episodes to test the environment"
+        "--testing", dest="testing", type=int, default=10000, help="The number of episodes to test the environment"
     )
     args = parser.parse_args()
     

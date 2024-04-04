@@ -6,3 +6,5 @@ matplotlib==3.8.3
 numpy==1.26.4
 tqdm==4.66.2
 # tensorflow==2.16.1
+optuna==3.6.1
+optuna-dashboard==0.15.1
