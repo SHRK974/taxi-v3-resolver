@@ -13,7 +13,7 @@ class Hyperparameter(BaseModel):
     episodes_training: int
     episodes_testing: int
     
-    @field_validator("alpha", "gamma", "epsilon", "min_epsilon", "epsilon_decay_rate")
+    @field_validator("alpha", "gamma", "epsilon", "epsilon_decay_rate")
     @classmethod
     def constrained_between_zero_and_one(cls, value: float, info: ValidationInfo) -> float:
         if not 0 < value < 1:
@@ -25,4 +25,11 @@ class Hyperparameter(BaseModel):
     def constrained_positive(cls, value: int, info: ValidationInfo) -> int:
         if value <= 0:
             raise ValueError(f"Hyperparameter {info.field_name} must be a positive integer. Got {value} instead.")
+        return value
+    
+    @field_validator("min_epsilon")
+    @classmethod
+    def constrained_less_than_epsilon(cls, value: float, info: ValidationInfo) -> float:
+        if value >= info.data["epsilon"]:
+            raise ValueError(f"Hyperparameter min_epsilon must be less than epsilon. Got {value} >= {info.data['epsilon']} instead.")
         return value

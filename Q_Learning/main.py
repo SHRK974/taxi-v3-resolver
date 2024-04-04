@@ -31,7 +31,7 @@ def q_learning(hyperparameter: Hyperparameter) -> BatchResult:
     
     manager: GameManager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"))
     trainer: QLearningTrainer = QLearningTrainer(manager=manager, hyperparameter=hyperparameter)
-    trainer.train()
+    trainer.train(name="q_table")
     
     for i in range(hyperparameter.episodes_testing):
         result: EpisodeResult = QLearning(manager=manager, q_table_name="q_table").solve()
