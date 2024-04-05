@@ -19,7 +19,7 @@ if __name__ == "__main__":
         direction="maximize",
     )
     with ProcessPoolExecutor(max_workers=WORKERS) as pool:
-        for _ in range(10):
+        for _ in range(100):
             pool.submit(study_q_learning.optimize, q_learning_objective, n_trials=10)
     
     study_sarsa = optuna.create_study(
