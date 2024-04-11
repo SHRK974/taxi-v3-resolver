@@ -43,7 +43,7 @@ You must report these facts and figures in a document that also includes :
 pip install -r requirements.txt
 ```
 
-### Bruteforce
+## Bruteforce
 
 A naive bruteforce algorithm is available to compare with your optimized algorithm. To run it, use the following command:
 
@@ -53,9 +53,9 @@ python Bruteforce/main.py --episodes 1000
 
 > The `--episodes` argument is optional and defaults to 10000. You are free to change it to any value you want.
 
-#### How it works
+### Strategy
 
-The current bruteforce implementation is not naive, in the sens that it will try every random action each episode until the game is solved as it would be time-consuming. The goal was to find a solution to start the game with a predictable and repeatable behavior.
+The current bruteforce implementation is not naive, in the sens that it will not try every random action each episode until the game is solved as it would be time-consuming. The goal was to find a solution to start the game with a predictable and repeatable behavior.
 
 The strategy was designed around the grid layout of the game *(see figure below)*. There are 5 lanes the taxi can move on, and walls preventing the taxi passing through them. The particularity of this layout is, wherever the taxi is, if it goes up, it will never be blocked by a wall.
 
@@ -77,7 +77,7 @@ The sequence of actions is as follows:
 
 Using this sequence at the start of the game, we can determine precisely where the taxi will start from. Then, we can set a sequence of actions that will lead the taxi to the passenger, and then to the destination, from the top-left or top-right corner.
 
-### Q-Learning
+## Q-Learning
 
 A Q-Learning algorithm is available. To run it, use the following command:
 
@@ -96,6 +96,12 @@ For a complete list of arguments, use the `--help` flag:
 ```bash
 python Q-Learning/main.py --help
 ```
+
+>Q-learning lets the agent use the environment's rewards to learn, over time, the best action to take in a given state. We have a reward table, P, that the agent will learn from. It does thing by taking an action in the current state, then updating a Q-value to remember if that action was beneficial.
+>
+>The values stored in the Q-table are called Q-values, and they map to a (state, action) combination.
+>
+>A Q-value for a particular state-action combination is representative of the "quality" of an action taken from that state. Better Q-values imply better chances of getting greater rewards.
 
 ### SARSA
 
@@ -117,6 +123,12 @@ For a complete list of arguments, use the `--help` flag:
 python Sarsa/main.py --help
 ```
 
+>SARSA is another reinforcement learning algorithm that enables the agent to learn from the environment's rewards to determine the best action to take in a given state. Similar to Q-learning, SARSA utilizes a reward table, typically denoted as P, for learning. However, SARSA updates its Q-values differently.
+>
+>The Q-values in SARSA represent the quality of taking a specific action from a particular state. These values are stored in a Q-table and are updated based on the agent's experiences. Unlike Q-learning, where the Q-value update is based on the maximum Q-value of the next state, SARSA updates its Q-values based on the action actually taken in the next state, hence its name "State-Action-Reward-State-Action".
+>
+>In SARSA, the agent selects an action based on its current policy, takes that action in the current state, observes the reward, transitions to the next state, selects the next action based on the policy, and finally updates the Q-value of the previous state-action pair. This process allows SARSA to learn directly from its interactions with the environment and adjust its actions accordingly.
+
 ## Resources
 
 ### Hyperparameters tuning
@@ -137,12 +149,17 @@ In this project we use the following performance calculation function:
 
 ```python
 ObjectiveScore = (
-  (success_rate * 2)
-  + (mean_rewards_per_steps * 1.5)
-  - (mean_penalties_per_episode * 3)
-  - (mean_steps_per_episode * 1)
-)
+  adjusted_success_rate
+  + adjusted_mean_rewards_per_steps
+  - adjusted_mean_penalties_per_episode
+) * success_rate_penalty_factor - worst_episode_penalty
 ```
+
+Where:
+
+- `adjusted_value` is `value * value_weight`
+- `worst_episode_penalty` is `worst_episode.epochs / best_episode.epochs`
+- `success_rate_penalty_factor` is `0.5` if success_rate is less than **100%**, otherwise `1`
 
 This score is calculated on a testing batch of episodes.
 
