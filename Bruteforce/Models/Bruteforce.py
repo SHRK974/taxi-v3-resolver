@@ -46,7 +46,7 @@ class Bruteforce:
         elif steps == 2:
             sequence: Sequence = self.top_right_sequence
         else:
-            raise ValueError("Taxi is not in a corner.")
+            raise ValueError("Oh no... This should never happen. The taxi is not in the top left or top right corner. Bail out!")
 
         solved: bool = SequenceResolver(manager=self.manager, sequence=sequence).solve(state=state)
         self.manager.render()

@@ -5,7 +5,7 @@
 The goal of this project is to solve the Taxi-v3 game with an optimized model-free episodic learning algorithm. The agent is a taxi that must pick up some random passengers, and drop them off at some specific locations. The game environment can be found in the Gym library.
 
 > You are free to choose the algorithm, whether on-policy or off-policy.
-> We recommand Deep Q-Learning, or Monte Carlo-based algorithms, but feel free to find the best possible approach.
+> We recommend Deep Q-Learning, or Monte Carlo-based algorithms, but feel free to find the best possible approach.
 
 ### Expected features
 
@@ -51,9 +51,31 @@ A naive bruteforce algorithm is available to compare with your optimized algorit
 python Bruteforce/main.py --episodes 1000
 ```
 
-> The `--episodes` argument is optional and defaults to 100. You are free to change it to any value you want.
+> The `--episodes` argument is optional and defaults to 10000. You are free to change it to any value you want.
 
-A benchmark and a report is available in the `Bruteforce` folder.
+#### How it works
+
+The current bruteforce implementation is not naive, in the sens that it will try every random action each episode until the game is solved as it would be time-consuming. The goal was to find a solution to start the game with a predictable and repeatable behavior.
+
+The strategy was designed around the grid layout of the game *(see figure below)*. There are 5 lanes the taxi can move on, and walls preventing the taxi passing through them. The particularity of this layout is, wherever the taxi is, if it goes up, it will never be blocked by a wall.
+
+```bash
++---------+
+|R: | : :G|
+| : | : : |
+| : : : : |
+| | : | : |
+|Y| : |B: |
++---------+
+```
+
+The sequence of actions is as follows:
+
+- Move the taxi up, until it hits the wall.
+- Move the taxi left, until it hits the wall. At this point, the taxi is in the first or the third column.
+- Move the taxi right, until it hits the wall. If the taxi moved successfully two times, it will be in the top-right corner. Otherwise, if the taxi only moved once, it should go back left, and then it will be in the top-left corner.
+
+Using this sequence at the start of the game, we can determine precisely where the taxi will start from. Then, we can set a sequence of actions that will lead the taxi to the passenger, and then to the destination, from the top-left or top-right corner.
 
 ### Q-Learning
 
