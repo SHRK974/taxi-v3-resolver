@@ -55,22 +55,22 @@ def q_learning(hyperparameter: Hyperparameter) -> BatchResult:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train the Taxi-v3 environment using Q-Learning")
     parser.add_argument(
-        "-a", "--alpha", dest="alpha", type=float, default=0.14708573021607485, help="The learning rate"
+        "-a", "--alpha", dest="alpha", type=float, default=0.2527618406041709, help="The learning rate"
     )
     parser.add_argument(
-        "-g", "--gamma", dest="gamma", type=float, default=0.8214754027878391, help="The discount factor"
+        "-g", "--gamma", dest="gamma", type=float, default=0.7186500179764495, help="The discount factor"
     )
     parser.add_argument(
-        "-e", "--epsilon", dest="epsilon", type=float, default=0.3494529367601081, help="The exploration rate"
+        "-e", "--epsilon", dest="epsilon", type=float, default=0.2576627315783104, help="The exploration rate"
     )
     parser.add_argument(
-        "--min_epsilon", dest="min_epsilon", type=float, default=0.029177727265658916, help="The minimum exploration rate"
+        "--min_epsilon", dest="min_epsilon", type=float, default=0.0655491448060367, help="The minimum exploration rate"
     )
     parser.add_argument(
-        "--epsilon_decay_rate", dest="epsilon_decay_rate", type=float, default=0.20124411232127526, help="The rate at which the exploration rate decays"
+        "--epsilon_decay_rate", dest="epsilon_decay_rate", type=float, default=0.7438305122865467, help="The rate at which the exploration rate decays"
     )
     parser.add_argument(
-        "--training", dest="training", type=int, default=29038, help="The number of episodes to train the environment"
+        "--training", dest="training", type=int, default=20792, help="The number of episodes to train the environment"
     )
     parser.add_argument(
         "--testing", dest="testing", type=int, default=10000, help="The number of episodes to test the environment"

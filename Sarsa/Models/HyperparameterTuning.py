@@ -33,7 +33,7 @@ def objective(trial: optuna.Trial) -> float:
         epsilon=trial.suggest_float("epsilon", 0.1, 0.9),
         min_epsilon=trial.suggest_float("min_epsilon", 0.01, 0.1),
         epsilon_decay_rate=trial.suggest_float("epsilon_decay_rate", 0.01, 0.9),
-        episodes_training=trial.suggest_int("episodes_training", 1000, 30000),
+        episodes_training=trial.suggest_int("episodes_training", 1000, 15000),
         episodes_testing=10000,
     )
 

@@ -20,7 +20,7 @@ class TuningQuantifier(BaseModel):
         """
         Calculate the score of the tuning quantifier
         """
-        success_rate_penalty_factor = 1 if self.success_rate < 100 else 0.5
+        success_rate_penalty_factor = 0.5 if self.success_rate < 100 else 1
         worst_episode_penalty = self.worst_episode.epochs / self.best_episode.epochs
         
         adjusted_success_rate = self.success_rate * self.success_rate_weight
@@ -31,5 +31,4 @@ class TuningQuantifier(BaseModel):
             adjusted_success_rate
             + adjusted_mean_rewards_per_steps
             - adjusted_mean_penalties_per_episode
-            - worst_episode_penalty
-        ) * success_rate_penalty_factor
+        ) * success_rate_penalty_factor - worst_episode_penalty
