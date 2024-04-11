@@ -3,7 +3,11 @@ import sys
 from os.path import abspath, dirname, join
 
 import gymnasium as gym
+import os
 import pickle
+import random
+from time import sleep
+from tqdm import tqdm
 
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
@@ -29,19 +33,33 @@ def sarsa(hyperparameter: Hyperparameter) -> BatchResult:
     """
     number_solved, number_unsolved = 0, 0
     results: list[EpisodeResult] = []
+    animations: list[str] = []
     
     manager: GameManager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"))
     trainer: SarsaTrainer = SarsaTrainer(manager=manager, hyperparameter=hyperparameter)
     trainer.train(name="q_table")
     
-    for i in range(hyperparameter.episodes_testing):
+    print(f"Testing started on {hyperparameter.episodes_testing} episodes.", end=f"\n")
+    for _ in tqdm(range(hyperparameter.episodes_testing)):
+        manager: GameManager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"), track_playback=True)
         result: EpisodeResult = Sarsa(manager=manager, q_table_name="q_table").solve()
         results.append(result)
+        
+        playback = manager.get_playback()
+        if len(playback) > 0:
+            animations.append(playback)
+        
         if result.solved:
             number_solved += 1
         else:
             number_unsolved += 1
-
+    
+    playback = random.choice(animations)
+    for frame in playback:
+        os.system('cls')
+        print(frame)
+        sleep(0.5)
+    
     batch_result = BatchResult(
         total_solved=number_solved,
         total_unsolved=number_unsolved,
@@ -49,12 +67,12 @@ def sarsa(hyperparameter: Hyperparameter) -> BatchResult:
         success_rate=(number_solved / hyperparameter.episodes_testing) * 100,
         results=results
     )
+    print("SARSA", end="\n\n")
+    batch_result.summary()
 
     with open("./Sarsa/batch_result.pkl", "wb") as file:
         pickle.dump(batch_result, file)
-
-    batch_result.summary()
-
+    
     return batch_result
 
 if __name__ == "__main__":

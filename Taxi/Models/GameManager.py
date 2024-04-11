@@ -1,6 +1,7 @@
 from typing import Any, SupportsFloat, Tuple
 
 import gymnasium as gym
+import random
 
 from Bruteforce.Data.SequenceResult import SequenceResult
 from Taxi.Data.StepResult import StepResult, step_result_from_tuple
@@ -8,20 +9,23 @@ from Taxi.Enums.GameActionEnum import GameActionEnum
 
 
 class GameManager:
-    def __init__(self, env: gym.Env, render_output: bool = False) -> None:
+    def __init__(self, env: gym.Env, track_playback: bool = False) -> None:
         self.env = env
         self.passenger_found = False
         self.epochs = 0
         self.rewards = 0
         self.penalties = 0
-        self.render_output = render_output
+        self.playback_available = track_playback and random.randint(0, 100) < 10
+        self.playback = []
+    
+    def get_playback(self) -> list:
+        """
+        Gets the playback of the environment.
 
-    def render(self) -> None:
+        Returns:
+            list: The playback.
         """
-        Renders the environment.
-        """
-        if self.render_output:
-            print(self.env.render())
+        return self.playback
 
     def reset(self) -> Tuple[Any, dict]:
         """
@@ -34,6 +38,7 @@ class GameManager:
         self.epochs = 0
         self.rewards = 0
         self.penalties = 0
+        self.playback = []
         return self.env.reset()
 
     def step(self, action: GameActionEnum) -> StepResult:
@@ -48,6 +53,8 @@ class GameManager:
         """
         result: StepResult = step_result_from_tuple(step=self.env.step(action))
         self.__update_metrics(result)
+        if self.playback_available:
+            self.playback.append(self.env.render())
         return result
 
     def move_until_stopped(self, state: Any, action: GameActionEnum) -> Any:
@@ -66,6 +73,8 @@ class GameManager:
         while not done:
             result: StepResult = step_result_from_tuple(step=self.env.step(action))
             self.__update_metrics(result)
+            if self.playback_available:
+                self.playback.append(self.env.render())
             if result.state == state:
                 done = True
             else:

@@ -28,7 +28,6 @@ class Sarsa:
             if self.manager.epochs >= self.max_steps:
                 break
         
-        self.manager.render()
         return EpisodeResult(
             solved=done,
             epochs=self.manager.epochs,

@@ -6,6 +6,9 @@ sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 import gymnasium as gym
 import pickle
+import random
+import os
+from time import sleep
 from tqdm import tqdm
 
 from Bruteforce.Models.Bruteforce import Bruteforce
@@ -30,18 +33,31 @@ def bruteforce(amount: int) -> BatchResult:
     """
     number_solved, number_unsolved = 0, 0
     bruteforce_results = []
-    for i in tqdm(range(amount)):
-        manager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"))
+    animations: list[str] = []
+    
+    for _ in tqdm(range(amount)):
+        manager = GameManager(env=gym.make(ENV_GAME, render_mode="ansi"), track_playback=True)
         result: EpisodeResult = Bruteforce(
             manager=manager,
             top_right_sequence=TopRightSequence(),
             top_left_sequence=TopLeftSequence()
         ).solve()
         bruteforce_results.append(result)
+        
+        playback = manager.get_playback()
+        if len(playback) > 0:
+            animations.append(playback)
+        
         if result.solved:
             number_solved += 1
         else:
             number_unsolved += 1
+    
+    playback = random.choice(animations)
+    for frame in playback:
+        os.system('cls')
+        print(frame)
+        sleep(0.5)
 
     batch_result = BatchResult(
         total_solved=number_solved,
