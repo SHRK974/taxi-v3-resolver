@@ -1,9 +1,9 @@
 import argparse
 import sys
 from os.path import abspath, dirname, join
-import pickle
 
 import gymnasium as gym
+import pickle
 
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
@@ -50,7 +50,7 @@ def q_learning(hyperparameter: Hyperparameter) -> BatchResult:
         results=results
     )
 
-    with open("./Q_Learning/Test_results/batch_result.pkl", "wb") as file:
+    with open("./Q_Learning/batch_result.pkl", "wb") as file:
         pickle.dump(batch_result, file)
 
     batch_result.summary()

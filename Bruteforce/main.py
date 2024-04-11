@@ -1,11 +1,11 @@
 import argparse
 import sys
 from os.path import abspath, dirname, join
-import pickle
 
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
 import gymnasium as gym
+import pickle
 from tqdm import tqdm
 
 from Bruteforce.Models.Bruteforce import Bruteforce
@@ -51,7 +51,7 @@ def bruteforce(amount: int) -> BatchResult:
         results=bruteforce_results
     )
 
-    with open("./Bruteforce/Test_results/batch_result.pkl", "wb") as file:
+    with open("./Bruteforce/batch_result.pkl", "wb") as file:
         pickle.dump(batch_result, file)
 
     batch_result.summary()
