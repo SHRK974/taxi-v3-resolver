@@ -1,6 +1,7 @@
 import argparse
 import sys
 from os.path import abspath, dirname, join
+import pickle
 
 import gymnasium as gym
 
@@ -48,6 +49,10 @@ def q_learning(hyperparameter: Hyperparameter) -> BatchResult:
         success_rate=(number_solved / hyperparameter.episodes_testing) * 100,
         results=results
     )
+
+    with open("./Q_Learning/Test_results/batch_result.pkl", "wb") as file:
+        pickle.dump(batch_result, file)
+
     batch_result.summary()
 
     return batch_result

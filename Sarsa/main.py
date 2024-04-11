@@ -1,8 +1,10 @@
 import argparse
 import sys
 from os.path import abspath, dirname, join
+import pickle
 
 import gymnasium as gym
+import numpy as np
 
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
@@ -48,6 +50,10 @@ def sarsa(hyperparameter: Hyperparameter) -> BatchResult:
         success_rate=(number_solved / hyperparameter.episodes_testing) * 100,
         results=results
     )
+
+    with open("./Sarsa/Test_results/batch_result.pkl", "wb") as file:
+        pickle.dump(batch_result, file)
+
     batch_result.summary()
 
     return batch_result
@@ -87,6 +93,7 @@ if __name__ == "__main__":
             episodes_training=args.training,
             episodes_testing=args.testing
         )
+
     except ValueError as e:
         _, value, _ = sys.exc_info()
         print(value)

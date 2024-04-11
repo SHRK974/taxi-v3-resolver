@@ -1,6 +1,7 @@
 import argparse
 import sys
 from os.path import abspath, dirname, join
+import pickle
 
 sys.path.insert(0, abspath(join(dirname(__file__), '..')))
 
@@ -49,6 +50,10 @@ def bruteforce(amount: int) -> BatchResult:
         success_rate=(number_solved / amount) * 100,
         results=bruteforce_results
     )
+
+    with open("./Bruteforce/Test_results/batch_result.pkl", "wb") as file:
+        pickle.dump(batch_result, file)
+
     batch_result.summary()
 
     return batch_result
