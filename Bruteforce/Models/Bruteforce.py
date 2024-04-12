@@ -49,7 +49,6 @@ class Bruteforce:
             raise ValueError("Oh no... This should never happen. The taxi is not in the top left or top right corner. Bail out!")
 
         solved: bool = SequenceResolver(manager=self.manager, sequence=sequence).solve(state=state)
-        self.manager.render()
         return EpisodeResult(
             solved=solved,
             epochs=self.manager.epochs,
